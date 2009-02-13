@@ -147,6 +147,57 @@ class TreeTest < Test::Unit::TestCase
     assert_equal [@root1, @root2, @root3], @root2.self_and_siblings
     assert_equal [@root1, @root2, @root3], @root3.self_and_siblings
   end           
+
+  def test_is_root
+    assert @root1.root?
+    assert @root2.root?
+    assert_equal false, @root_child1.root?
+    assert_equal false, @child1_child.root?
+  end
+
+  def test_has_siblings
+    assert @root1.has_siblings?
+    assert @root2.has_siblings?
+    assert_equal false, @child1_child.has_siblings?
+    assert @root_child1.has_siblings?
+    assert @root_child2.has_siblings?
+  end
+
+  def test_has_children
+    assert @root1.has_children?
+    assert_equal false, @root2.has_children?
+    assert @root_child1.has_children?
+    assert_equal false, @root_child2.has_children?
+    assert_equal false, @child1_child.has_children?
+  end
+
+  def test_leaf_node
+    assert_equal false, @root1.leaf?
+    assert_equal false, @root_child1.leaf?
+    assert @root2.leaf?
+    assert @root_child2.leaf?
+    assert @child1_child.leaf?
+  end
+
+  def test_tree_height
+    assert_equal 2, @root1.height
+    assert_equal 1, @root_child1.height
+    assert_equal 0, @child1_child.height
+  end
+
+  def test_node_depth
+    assert_equal 0, @root1.depth
+    assert_equal 0, @root2.depth
+    assert_equal 1, @root_child1.depth
+    assert_equal 1, @root_child2.depth
+    assert_equal 2, @child1_child.depth
+  end
+
+  def test_tree_width
+    assert_equal 2, @root1.width
+    assert_equal 1, @root2.width
+    assert_equal 1, @root_child1.width
+  end
 end
 
 class TreeTestWithEagerLoading < Test::Unit::TestCase
