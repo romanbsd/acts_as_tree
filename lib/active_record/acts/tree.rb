@@ -90,6 +90,51 @@ module ActiveRecord
         def self_and_siblings
           parent ? parent.children : self.class.roots
         end
+
+        # Returns true if the node is a root node, false otherwise.
+        def root?
+          !parent_id
+        end
+
+        # Returns true if the node is a leaf node, false otherwise.
+        def leaf?
+          !has_children?
+        end
+
+        # Returns true if the node has siblings, false otherwise.
+        def has_siblings?
+          !self.siblings.size.zero?
+        end
+
+        # Returns true if the node has children, false otherwise.
+        def has_children?
+          !self.children.size.zero?
+        end
+
+        # Returns the height for the node.
+        # (For the root node it equals to the tree height)
+        # The height is defined as a length of a path from this node to
+        # its deepest child.
+        def height
+          return 0 unless has_children?
+          children.inject(0) {|dep,c| dep > c.height ? dep : c.height} + 1
+        end
+
+        # Returns the depth of the node.
+        # The depth is defined as a length of the path from the root
+        # to the node.
+        def depth
+          count = 0
+          node = self
+          count += 1 while node = node.parent
+          count
+        end
+
+        # Returns the tree width, defined as a sum of all leaves
+        def width
+          return 1 unless has_children?
+          children.inject(0) {|sum,c| sum + c.width}
+        end
       end
     end
   end
